@@ -9,11 +9,17 @@ def grade(submission):
     # Extract text
     submission_text = soup.get_text().strip()
 
-    # Grading logic for Design1
-    if submission_text == '55':
-        return 5, 'comment Score: 5'
-    elif submission_text == '33':
-        return 3, 'comment Score: 3'
-    else:
-        return 0, 'comment Score: 0'
+    try:
+        # Try to convert the submission text to an integer
+        submission_int = int(submission_text)
+    except ValueError:
+        # If the conversion fails, return -1 to indicate an error
+        return -1, "Invalid submission format. Please submit a valid integer."
 
+    # Grading logic for Design1
+    if submission_int == 55:
+        return 5, 'Score: 5'
+    elif submission_int == 33:
+        return 3, 'Score: 3'
+    else:
+        return 0, 'Score: 0'

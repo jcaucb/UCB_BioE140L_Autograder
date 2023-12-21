@@ -40,19 +40,20 @@ def grade_submission(assignment, submission):
         print(f"No grading script found for assignment: {assignment_name}")
         return 0, "No grading script available"
 
-def update_submission(course_id, assignment_id, user_id, score, comment):
+def update_submission(course_id, assignment_id, user_id, score, comment, gradeable=True):
     payload = {
-        'submission': {
-            'posted_grade': score
-        },
         'comment': {
             'text_comment': comment
         }
     }
+    if gradeable:
+        payload['submission'] = {'posted_grade': score}
+    
     response = requests.put(f"{CANVAS_URL}courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}",
                             headers=headers, json=payload)
     return response.status_code == 200
 
+# ... [rest of your code before the main function] ...
 
 def main():
     while True:
@@ -67,25 +68,32 @@ def main():
             submissions = get_submissions(assignment['id'])
 
             if not submissions:
-                print(f"No submissions found for assignment {assignment['name']}.")
+                print(f"No submissions found or failed to retrieve submissions for assignment {assignment['name']}.")
+                continue  # Skip to the next assignment if there are no submissions
 
             for submission in submissions:
                 print(f"Checking submission from user {submission['user_id']} for assignment {assignment['name']}.")
                 if submission['workflow_state'] == 'submitted':
                     print(f"Grading submission from user {submission['user_id']} for assignment {assignment['name']}.")
                     score, comment = grade_submission(assignment, submission)
-                    print(f"Attempting to update submission for user {submission['user_id']} with score {score} and comment: {comment}")
-                    update_successful = update_submission(COURSE_ID, assignment['id'], submission['user_id'], score, comment)
+
+                    # Check if the score is less than 0, indicating an error or ungradable submission
+                    if score < 0:
+                        gradable = False
+                        print(f"Submission from user {submission['user_id']} cannot be graded. Comment: {comment}")
+                    else:
+                        gradable = True
+                        print(f"Attempting to update submission for user {submission['user_id']} with score {score} and comment: {comment}")
+
+                    update_successful = update_submission(COURSE_ID, assignment['id'], submission['user_id'], score, comment, gradable)
                     if update_successful:
                         print(f"Successfully updated submission for user {submission['user_id']} with score {score}.")
                     else:
                         print(f"Failed to update submission for user {submission['user_id']}.")
-        
+
         print("Completed processing all assignments. Waiting for 5 minutes before next iteration.")
         # Wait for 5 minutes before the next iteration
         time.sleep(300)
 
-
 if __name__ == '__main__':
     main()
-
