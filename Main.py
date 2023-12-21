@@ -27,10 +27,18 @@ def get_submissions(assignment_id):
         print(f"Failed to retrieve submissions for assignment {assignment_id}")
         return []
 
+import importlib
+
 def grade_submission(assignment, submission):
-    # Placeholder for grading logic. This needs to be integrated with your actual grading scripts.
-    # Return a tuple of (score, comment)
-    return 0, "Not graded yet"
+    assignment_name = assignment['name'].replace(" ", "_").lower()  # Format the assignment name to match script names
+    grading_module_name = f"grading_scripts.grade_{assignment_name}"
+
+    try:
+        grading_module = importlib.import_module(grading_module_name)
+        return grading_module.grade(submission)
+    except ImportError:
+        print(f"No grading script found for assignment: {assignment_name}")
+        return 0, "No grading script available"
 
 def update_submission(course_id, assignment_id, user_id, score, comment):
     payload = {
