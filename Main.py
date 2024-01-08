@@ -79,28 +79,27 @@ def get_submissions(assignment_id):
 
     return submissions
 
+def update_submission(course_id, assignment_id, user_id, score, comments, gradeable=True):
+    combined_comment = '\n'.join(comments)  # Joins all comments with a newline character between them
 
-    
-def update_submission(course_id, assignment_id, user_id, score, comment, gradeable=True):
     try:
         payload = {
-            'comment': {'text_comment': comment}
+            'submission': {'posted_grade': score},
+            'comment': {'text_comment': combined_comment}
         }
-        if gradeable:
-            payload['submission'] = {'posted_grade': score}
-
-        response = requests.put(f"{CANVAS_URL}courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}",
-                                headers=headers, json=payload)
+        response = requests.put(
+            f"{CANVAS_URL}courses/{course_id}/assignments/{assignment_id}/submissions/{user_id}",
+            headers=headers, json=payload
+        )
         if response.status_code == 200:
             logging.debug(f"Successfully updated submission for user {user_id}")
             return True
         else:
-            logging.error(f"Failed to update submission for user {user_id}, status code: {response.status_code}")
+            logging.error(f"Failed to update submission for user {user_id}, status code: {response.status_code}, response: {response.text}")
             return False
     except Exception as e:
         logging.error(f"Exception occurred while updating submission for user {user_id}: {e}")
         return False
-
 
 # ... [rest of your code before the main function] ...
 
