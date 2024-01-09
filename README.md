@@ -31,6 +31,3 @@ Scores and comments are generated for each criterion.
 - Requests library
 - BeautifulSoup library
 - PyDNA_CF_Simulator library
-
-## Repository Link
-[GitHub Repository](https://github.com/jcaucb/UCB_BioE140L_Autograder)
