@@ -14,25 +14,26 @@ This project provides an autograding script for the BioE 140L course at UC Berke
 2. **Automatic Grading and Feedback**: Evaluates each submission, applying grading criteria and generating scores and comments.
 3. **Submission Updates**: Updates Canvas with scores and detailed comments for each student.
 
-## Grading Scheme
-The script evaluates submissions based on the following criteria, each carrying specific point values:
+## Grading Scheme for Design1
 
-1. **CF Shorthand Parsing (1 point)**: Checks whether the CF shorthand is correctly formatted. Incorrect formatting results in 0 points.
+The autograder evaluates "Design1" submissions based on several criteria, each with specific point values. The maximum possible score is 5 points. Here's a breakdown of the evaluation criteria:
 
-2. **PCR Step Simulation (1 point)**: Verifies the successful simulation of the PCR step. Failure to simulate correctly results in 0 points.
+1. **CF Shorthand Parsing (1 point)**: 
+   - Validates the format of the Construction File (CF) shorthand. Incorrect formatting results in 0 points.
+   
+2. **PCR Step Simulation (1 point)**: 
+   - Verifies the successful simulation of the Polymerase Chain Reaction (PCR) step. Failure to simulate correctly results in 0 points.
 
-3. **Restriction Sites Check (1 point)**: Assesses the presence of necessary restriction sites (EcoRI, BamHI, BglII, XhoI) in the PCR product. Missing one or more required sites results in a deduction of points.
+3. **Restriction Sites Check (1 point)**: 
+   - Assesses the presence of required restriction sites (EcoRI, BamHI, BglII, XhoI) in the PCR product. Missing sites result in a deduction of points.
 
-4. **Biobricking Check (1 point)**: Ensures that the biobricking restriction sites are in the correct order and appear only once. Errors in ordering or multiple occurrences lead to point deductions.
+4. **Biobricking Check (1 point)**: 
+   - Ensures biobricking restriction sites are in the correct order and occur only once. Errors lead to point deductions.
 
-5. **5' Tails Check (1 point)**: Confirms the presence and adequacy of 5' tails for each restriction site. Missing or insufficient tails result in a deduction of points.
+5. **5' Tails Check (1 point)**: 
+   - Confirms the presence and adequacy of 5' tails for each restriction site. Missing or insufficient tails result in a deduction of points.
 
-6. **CF Simulation (2 points)**: Involves the full simulation of the construction file. Failure in this step leads to a deduction of points.
-
-7. **Product Check (2 points)**: Evaluates the final product plasmid for the presence of target sequences and backbone. Missing elements or incorrect sequences result in a deduction of points.
-
-Each step contributes to the total score, with a maximum possible score of 9 points. Detailed feedback is provided for each step to guide students on areas of improvement.
-
+If any step fails, subsequent steps are not evaluated, capping the maximum possible score at the point of failure.
 
 Scores and comments are generated for each criterion.
 
